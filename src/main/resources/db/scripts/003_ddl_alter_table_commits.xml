@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <changeSet id="2" author="Petr Arsentev">
+    <changeSet id="3" author="boris (generated)">
         <createTable tableName="commits">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -29,7 +29,7 @@
                 baseColumnNames="repository_id"
                 referencedTableName="repositories"
                 referencedColumnNames="id"
-                constraintName="fk_commits_repository"/>
+                constraintName="fk_repository_user"/>
     </changeSet>
 
 </databaseChangeLog>
