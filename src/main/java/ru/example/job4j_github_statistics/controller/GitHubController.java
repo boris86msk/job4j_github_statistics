@@ -1,10 +1,10 @@
 package ru.example.job4j_github_statistics.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.example.job4j_github_statistics.dto.RepositoryCommits;
 import ru.example.job4j_github_statistics.model.Repository;
 import ru.example.job4j_github_statistics.service.RepositService;
@@ -20,7 +20,7 @@ public class GitHubController {
 
     @GetMapping("/repositories/{username}")
     public List<Repository> getAllRepositories(@PathVariable String username) {
-        return repositService.getList(username);
+            return repositService.getList(username);
     }
 
     @GetMapping("/commits/{name}")

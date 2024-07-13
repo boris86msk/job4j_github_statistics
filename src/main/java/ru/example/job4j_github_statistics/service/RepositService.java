@@ -1,6 +1,7 @@
 package ru.example.job4j_github_statistics.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.example.job4j_github_statistics.model.Repository;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RepositService {
@@ -28,12 +30,17 @@ public class RepositService {
             return applicationRepository.findRepositoryByUserId(userByLogin.get().getId());
         } else {
             String request = String.format("https://api.github.com/users/%s/repos", username);
+
             List<Map> repository = webClient
                     .get()
                     .uri(request)
                     .retrieve()
                     .bodyToMono(List.class)
                     .block();
+
+            User newUser = new User();
+            newUser.setLogin(username);
+            userRepository.save(newUser);
 
             List<Repository> repositoryList = repository.stream()
                     .map(t -> {
@@ -42,6 +49,7 @@ public class RepositService {
                         repo.setUrl(t.get("html_url").toString());
                         repo.setCreatedAt(LocalDateTime.parse(t.get("created_at").toString().substring(0, 19)));
                         repo.setPushedAt(LocalDateTime.parse(t.get("pushed_at").toString().substring(0, 19)));
+                        repo.setUser(newUser);
                         return repo;
                     })
                     .toList();
