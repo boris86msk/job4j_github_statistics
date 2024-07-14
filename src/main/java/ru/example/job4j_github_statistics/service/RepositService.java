@@ -29,14 +29,7 @@ public class RepositService {
         if (userByLogin.isPresent()) {
             return applicationRepository.findRepositoryByUserId(userByLogin.get().getId());
         } else {
-            String request = String.format("https://api.github.com/users/%s/repos", username);
-
-            List<Map> repository = webClient
-                    .get()
-                    .uri(request)
-                    .retrieve()
-                    .bodyToMono(List.class)
-                    .block();
+            List<Map> repository = getRepositoryFromGitHub(username);
 
             User newUser = new User();
             newUser.setLogin(username);
@@ -58,5 +51,15 @@ public class RepositService {
 
             return repositoryList;
         }
+    }
+
+    public List<Map> getRepositoryFromGitHub(String login) {
+        String request = String.format("https://api.github.com/users/%s/repos", login);
+        return webClient
+                .get()
+                .uri(request)
+                .retrieve()
+                .bodyToMono(List.class)
+                .block();
     }
 }

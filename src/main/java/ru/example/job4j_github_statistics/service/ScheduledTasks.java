@@ -7,6 +7,7 @@ import ru.example.job4j_github_statistics.model.User;
 import ru.example.job4j_github_statistics.repository.UserRepository;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -18,5 +19,9 @@ public class ScheduledTasks {
     @Scheduled(fixedDelayString = "P1D")
     public void fetchCommits() {
         List<User> userList = userRepository.findAll();
+
+        List<List<Map>> repositoryList = userList.stream()
+                .map(u -> repositService.getRepositoryFromGitHub(u.getLogin()))
+                .toList();
     }
 }
