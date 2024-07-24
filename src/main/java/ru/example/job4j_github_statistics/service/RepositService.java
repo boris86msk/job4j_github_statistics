@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import ru.example.job4j_github_statistics.model.Commit;
 import ru.example.job4j_github_statistics.model.Repository;
 import ru.example.job4j_github_statistics.model.User;
 import ru.example.job4j_github_statistics.repository.ApplicationRepository;
@@ -23,7 +24,7 @@ public class RepositService {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
 
-    public List<Repository> getList(String username) {
+    public List<Repository> getListRepository(String username) {
         Optional<User> userByLogin = userRepository.findUserByLogin(username);
 
         if (userByLogin.isPresent()) {
@@ -38,7 +39,7 @@ public class RepositService {
             List<Repository> repositoryList = repository.stream()
                     .map(t -> {
                         Repository repo = new Repository();
-                        repo.setId(Long.parseLong(t.get("id").toString()));
+                        repo.setGitHudId(Long.parseLong(t.get("id").toString()));
                         repo.setUrl(t.get("html_url").toString());
                         repo.setCreatedAt(LocalDateTime.parse(t.get("created_at").toString().substring(0, 19)));
                         repo.setPushedAt(LocalDateTime.parse(t.get("pushed_at").toString().substring(0, 19)));
@@ -51,6 +52,16 @@ public class RepositService {
 
             return repositoryList;
         }
+    }
+
+    public List<Commit> getListCommit(String owner, String repo) {
+        String request = String.format("https://api.github.com/repos/%s/%s/commits", owner, repo);
+        return webClient
+                .get()
+                .uri(request)
+                .retrieve()
+                .bodyToMono(List.class)
+                .block();
     }
 
     public List<Map> getRepositoryFromGitHub(String login) {

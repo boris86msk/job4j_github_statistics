@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.example.job4j_github_statistics.dto.RepositoryCommits;
+import ru.example.job4j_github_statistics.model.Commit;
 import ru.example.job4j_github_statistics.model.Repository;
 import ru.example.job4j_github_statistics.service.RepositService;
 
@@ -20,17 +20,13 @@ public class GitHubController {
 
     @GetMapping("/repositories/{username}")
     public List<Repository> getAllRepositories(@PathVariable String username) {
-            return repositService.getList(username);
+            return repositService.getListRepository(username);
     }
 
-    @GetMapping("/commits/{name}")
-    public List<RepositoryCommits> getCommits(@PathVariable(value = "name") String name) {
-        return List.of();
+    @GetMapping("/commits/{owner}/{repo}")
+    public List<Commit> getCommits(@PathVariable(value = "owner") String owner,
+                                   @PathVariable(value = "repo") String repo) {
+        return repositService.getListCommit(owner, repo);
     }
 
-//    @PostMapping("/repository")
-//    public ResponseEntity<Void> create(@RequestBody Repository repository) {
-//        repositService.create(repository);
-//        return ResponseEntity.noContent().build();
-//    }
 }
