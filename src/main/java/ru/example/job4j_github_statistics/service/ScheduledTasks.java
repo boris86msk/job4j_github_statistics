@@ -26,7 +26,7 @@ public class ScheduledTasks {
      * "P1D" - the working period is once a one day
      */
     @Scheduled(fixedDelayString = "P1D")
-    public void fetchCommits() {
+    public void updateRepository() {
         List<User> userList = userRepository.findAll();
 
         for (User user : userList) {
