@@ -16,6 +16,9 @@ public class ScheduledTasks {
     private final GitHubRemote gitHubRemote;
     private final UserRepository userRepository;
 
+    /**
+     * "P1D" - the working period is once a one day
+     */
     @Scheduled(fixedDelayString = "P1D")
     public void fetchCommits() {
         List<User> userList = userRepository.findAll();
