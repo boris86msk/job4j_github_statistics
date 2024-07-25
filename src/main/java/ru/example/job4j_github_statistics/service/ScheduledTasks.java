@@ -18,7 +18,6 @@ import java.util.Optional;
 @Service
 public class ScheduledTasks {
     private final RepositService repositService;
-    private final GitHubRemote gitHubRemote;
     private final UserRepository userRepository;
     private final ApplicationRepository appRepository;
 
@@ -32,7 +31,7 @@ public class ScheduledTasks {
         for (User user : userList) {
             List<Map> repositoryFromGitHub = repositService.getRepositoryFromGitHub(user.getLogin());
             List<Long> listGitHubId = repositoryFromGitHub.stream()
-                    .map(r -> (Long) r.get("id"))
+                    .map(r -> Long.parseLong(r.get("id").toString()))
                     .toList();
 
             List<Repository> repositoryFromDB = appRepository.findRepositoryByUserId(user.getId());
