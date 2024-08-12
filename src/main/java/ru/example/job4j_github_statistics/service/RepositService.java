@@ -56,16 +56,20 @@ public class RepositService {
 
     public List<Commit> getListCommit(String owner, String repo) {
         String request = String.format("https://api.github.com/repos/%s/%s/commits", owner, repo);
-        return webClient
-                .get()
-                .uri(request)
-                .retrieve()
-                .bodyToMono(List.class)
-                .block();
+        return webClientRequest(request);
+    }
+
+    public List<Commit> getListCommitStartWithSha(String owner, String repo, String sha) {
+        String request = String.format("https://api.github.com/repos/%s/%s/commits?sha=%s", owner, repo, sha);
+        return webClientRequest(request);
     }
 
     public List<Map> getRepositoryFromGitHub(String login) {
         String request = String.format("https://api.github.com/users/%s/repos", login);
+        return webClientRequest(request);
+    }
+
+    private List webClientRequest(String request) {
         return webClient
                 .get()
                 .uri(request)
